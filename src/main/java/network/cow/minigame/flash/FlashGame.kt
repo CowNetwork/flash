@@ -1,25 +1,33 @@
 package network.cow.minigame.flash
 
+import net.kyori.adventure.text.Component
 import network.cow.minigame.noma.api.Game
 import network.cow.minigame.noma.api.config.PhaseConfig
 import network.cow.minigame.noma.api.phase.EmptyPhaseResult
 import network.cow.minigame.noma.spigot.phase.SpigotPhase
 import network.cow.messages.spigot.broadcastInfo
+import network.cow.minigame.noma.spigot.SpigotGame
 import network.cow.minigame.noma.spigot.phase.VotePhase
 import network.cow.minigame.noma.spigot.pool.WorldMeta
 
 import org.bukkit.Bukkit
+import org.bukkit.GameRule
 import org.bukkit.entity.Player
+import kotlin.io.path.name
 
 class FlashGame(game: Game<Player>, config: PhaseConfig<Player>) : SpigotPhase<EmptyPhaseResult>(game, config) {
     override fun onStart() {
-        val world = (this.game.getPhase("vote") as VotePhase<WorldMeta>).firstVotedItem()
         val startTime = System.currentTimeMillis()
+        val worldMeta = (this.game.getPhase("vote") as VotePhase<WorldMeta>).firstVotedItem()
+        val world = (this.game as SpigotGame).world
+        world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true)
         this.game.getPlayers().forEach {
-            it.setFlashState("speed", world.options["speed"] as Int)
+            it.setFlashState("speed", worldMeta.options["speedLevel"] as Int)
             it.setFlashState("startTime", startTime)
+            it.setRespawnLocation(worldMeta.globalSpawnLocations.first().toLocation(world) )
+            it.applyEffects()
+            it.giveItems()
         }
-        Bukkit.getServer().broadcastInfo("START!!!")
     }
     override fun onPlayerJoin(player: Player) = Unit
 

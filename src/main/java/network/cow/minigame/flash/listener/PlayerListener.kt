@@ -1,5 +1,6 @@
 package network.cow.minigame.flash.listener
 
+import com.destroystokyo.paper.event.player.PlayerPostRespawnEvent
 import net.kyori.adventure.text.Component
 import network.cow.minigame.flash.*
 import network.cow.minigame.flash.event.PlayerCheckpointEvent
@@ -16,6 +17,7 @@ import org.bukkit.event.block.Action
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.event.player.PlayerRespawnEvent
 import org.bukkit.plugin.Plugin
 
 class PlayerListener(val plugin: Plugin) : Listener {
@@ -70,7 +72,7 @@ class PlayerListener(val plugin: Plugin) : Listener {
         val type = event.item!!.type
         val player = event.player
 
-        if (type == Material.INK_SAC) {
+        if (type == Material.RED_DYE) {
             player.respawn()
             return
         }
@@ -85,8 +87,20 @@ class PlayerListener(val plugin: Plugin) : Listener {
     private fun onPlayerDeath(event: PlayerDeathEvent) {
         event.keepInventory = true
         //event.entity.player?.spigot().respawn()
-        Bukkit.getScheduler().runTaskLater(plugin, Runnable { event.entity.respawn() }, 1)
+        //Bukkit.getScheduler().runTaskLater(plugin, Runnable { event.entity.respawn() }, 1)
         event.deathMessage(Component.empty())
+    }
+
+    @EventHandler
+    private fun onPlayerRespawn(event: PlayerRespawnEvent) {
+        event.player.getRespawnLocation()?.let {
+            event.respawnLocation = it
+        }
+    }
+
+    @EventHandler
+    private fun onPlayerRespawn(event: PlayerPostRespawnEvent) {
+        event.player.respawn()
     }
 
     @EventHandler

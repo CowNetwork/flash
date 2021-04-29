@@ -10,7 +10,7 @@ import org.bukkit.potion.PotionEffectType
 
 val HIDE_PLAYER_ITEM = create(Material.BLAZE_ROD, "§c§lSpieler verstecken §r§7§o<Rechtsklick>")
 val SHOW_PLAYER_ITEM = create(Material.STICK, "§c§lSpieler anzeigen §r§7§o<Rechtsklick>")
-val RESPAWN_ITEM = create(Material.INK_SAC, "§c§lInstant-Tod(TM) §r§7§o<Rechtsklick>")
+val RESPAWN_ITEM = create(Material.RED_DYE, "§c§lInstant-Tod(TM) §r§7§o<Rechtsklick>")
 
 fun Player.isIngame() = this.gameMode != GameMode.SPECTATOR
 
@@ -18,11 +18,17 @@ fun Player.getRespawnLocation(): Location? {
     return this.getFlashState("respawnLocation")
 }
 
+fun Player.setRespawnLocation(location: Location) {
+    return this.setFlashState("respawnLocation", location)
+}
+
 fun Player.getCurrentCheckPointIndex() = this.getFlashState("checkpoints", mutableListOf<Checkpoint>()).size
 
 fun Player.setCurrentCheckpoint(checkpoint: Checkpoint) {
     val checkpoints = this.getFlashState("checkpoints", mutableListOf<Checkpoint>())
     checkpoints.add(checkpoint)
+    this.setFlashState("checkpoints", checkpoints)
+    this.setRespawnLocation(checkpoint.location)
 }
 
 fun Player.respawn() {

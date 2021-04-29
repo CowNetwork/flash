@@ -1,8 +1,14 @@
 version: "3"
 services:
   spigot:
-    image: "ghcr.io/cownetwork/paperspigot:1.16.5-571"
+    image: "ghcr.io/cownetwork/paperspigot:1.16.5-631"
     ports:
       - "25565:25565"
     volumes:
-      - "${PWD}/.run/plugins:/opt/spigot/plugins"
+      - "${PWD}/.run/plugins/flash/:/opt/spigot/plugins/flash/"
+      - "${PWD}/.run/configs/ops.json:/opt/spigot/ops.json"
+      - "${PWD}/.run/configs/server.properties:/opt/spigot/server.properties"
+      - "${PWD}/target/flash-1.0.0.jar:/opt/spigot/plugins/flash-1.0.0.jar"
+      - "/home/yannic/cow/noma/noma-spigot/target/noma-spigot-1.0.0.jar:/opt/spigot/plugins/noma-spigot-1.0.0.jar"
+      - "/home/yannic/cow/spigot-extensions/target/spigot-extensions-1.0.0.jar:/opt/spigot/plugins/spigot-extensions-1.0.0.jar"
+      - "/home/yannic/cow/messages/messages-spigot/target/messages-spigot-1.0.0.jar:/opt/spigot/plugins/messages-spigot-1.0.0.jar"
