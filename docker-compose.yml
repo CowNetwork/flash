@@ -1,0 +1,8 @@
+version: "3"
+services:
+  spigot:
+    image: "ghcr.io/cownetwork/paperspigot:1.16.5-571"
+    ports:
+      - "25565:25565"
+    volumes:
+      - "${PWD}/.run/plugins:/opt/spigot/plugins"

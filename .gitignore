@@ -69,7 +69,7 @@ fabric.properties
 # Editor-based Rest Client
 .idea/httpRequests
 
-run/
+.run/
 
 ### Intellij+iml Patch ###
 # Reason: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-249601023

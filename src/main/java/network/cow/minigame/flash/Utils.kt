@@ -1,5 +1,6 @@
 package network.cow.minigame.flash
 
+import net.kyori.adventure.text.Component
 import org.bukkit.*
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Firework
@@ -7,9 +8,11 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 import java.util.*
 
-fun create(material: Material, data: Short, name: String): ItemStack {
+fun create(material: Material, name: String): ItemStack {
     val item = ItemStack(material, 1)
-    // TODO: set values
+    val meta = item.itemMeta
+    meta.displayName(Component.text(name))
+    item.setItemMeta(meta)
     return item
 }
 
