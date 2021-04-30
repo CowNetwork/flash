@@ -20,10 +20,11 @@ class FlashGame(game: Game<Player>, config: PhaseConfig<Player>) : SpigotPhase<E
         val startTime = System.currentTimeMillis()
         val worldMeta = (this.game.getPhase("vote") as VotePhase<WorldMeta>).firstVotedItem()
         val world = (this.game as SpigotGame).world
+        // TODO: set in map config
         world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true)
         this.game.getPlayers().forEach {
-            it.setFlashState("speed", worldMeta.options["speedLevel"] as Int)
-            it.setFlashState("startTime", startTime)
+            it.setFlashState(StateKey.SPEED, worldMeta.options["speedLevel"] as Int)
+            it.setFlashState(StateKey.CHECKPOINTS, startTime)
             it.setRespawnLocation(worldMeta.globalSpawnLocations.first().toLocation(world) )
             it.applyEffects()
             it.giveItems()
@@ -35,13 +36,10 @@ class FlashGame(game: Game<Player>, config: PhaseConfig<Player>) : SpigotPhase<E
 
     }
 
-    override fun onStop(): EmptyPhaseResult {
-        return EmptyPhaseResult()
-    }
+    override fun onStop() = EmptyPhaseResult()
 
 
     override fun onTimeout() {
-        //
         TODO("Not yet implemented")
     }
 }

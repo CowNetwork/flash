@@ -15,19 +15,19 @@ val RESPAWN_ITEM = create(Material.RED_DYE, "§c§lInstant-Tod(TM) §r§7§o<Rec
 fun Player.isIngame() = this.gameMode != GameMode.SPECTATOR
 
 fun Player.getRespawnLocation(): Location? {
-    return this.getFlashState("respawnLocation")
+    return this.getFlashState(StateKey.RESPAWN_LOCATION)
 }
 
 fun Player.setRespawnLocation(location: Location) {
-    return this.setFlashState("respawnLocation", location)
+    return this.setFlashState(StateKey.RESPAWN_LOCATION, location)
 }
 
-fun Player.getCurrentCheckPointIndex() = this.getFlashState("checkpoints", mutableListOf<Checkpoint>()).size
+fun Player.getCurrentCheckPointIndex() = this.getFlashState(StateKey.CHECKPOINTS, mutableListOf<Checkpoint>()).size
 
 fun Player.setCurrentCheckpoint(checkpoint: Checkpoint) {
-    val checkpoints = this.getFlashState("checkpoints", mutableListOf<Checkpoint>())
+    val checkpoints = this.getFlashState(StateKey.CHECKPOINTS, mutableListOf<Checkpoint>())
     checkpoints.add(checkpoint)
-    this.setFlashState("checkpoints", checkpoints)
+    this.setFlashState(StateKey.CHECKPOINTS, checkpoints)
     this.setRespawnLocation(checkpoint.location)
 }
 
@@ -55,7 +55,7 @@ fun Player.sendTweetLink(map: String, time: String) {
 fun Player.applyEffects() {
     this.activePotionEffects.forEach { this.removePotionEffect(it.type) }
     this.addPotionEffect(PotionEffect(PotionEffectType.REGENERATION, Int.MAX_VALUE, 3))
-    this.addPotionEffect(PotionEffect(PotionEffectType.SPEED, Int.MAX_VALUE, this.getFlashState("speed", 19)))
+    this.addPotionEffect(PotionEffect(PotionEffectType.SPEED, Int.MAX_VALUE, this.getFlashState(StateKey.SPEED, 19)))
 }
 
 fun Player.toggleVisibility() {
@@ -82,14 +82,14 @@ fun Player.giveItems() {
     this.inventory.setItem(5, HIDE_PLAYER_ITEM)
 }
 
-fun Player.setFlashState(key: String, value: Any) {
-    this.setState(FlashPlugin::class.java, key, value)
+fun Player.setFlashState(key: StateKey, value: Any) {
+    this.setState(FlashPlugin::class.java, key.key, value)
 }
 
-fun <T> Player.getFlashState(key: String): T? {
-    return this.getState(FlashPlugin::class.java, key)
+fun <T> Player.getFlashState(key: StateKey): T? {
+    return this.getState(FlashPlugin::class.java, key.key)
 }
 
-fun <T> Player.getFlashState(key: String, default: T): T {
-    return this.getState(FlashPlugin::class.java, key, default = default!!)
+fun <T> Player.getFlashState(key: StateKey, default: T): T {
+    return this.getState(FlashPlugin::class.java, key.key, default = default!!)
 }

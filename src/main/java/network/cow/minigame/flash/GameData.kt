@@ -24,3 +24,10 @@ data class MapScore(
     val timeNeeded: Int,
     val accomplishedAt: Long
 )
+
+enum class StateKey(val key: String) {
+    SPEED("speed"),
+    START_TIME("startTime"),
+    CHECKPOINTS("checkpoints"),
+    RESPAWN_LOCATION("respawnLocation")
+}

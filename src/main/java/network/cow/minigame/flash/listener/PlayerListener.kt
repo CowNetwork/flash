@@ -125,7 +125,7 @@ class PlayerListener(val plugin: Plugin) : Listener {
             .filter { it != player }
             .forEach { player.showPlayer(this.plugin, it) }
 
-        val needed = event.finished - player.getFlashState<Long>("startTime")!!
+        val needed = event.finished - player.getFlashState<Long>(StateKey.START_TIME)!!
         val minutes = needed / (1000 * 60)
         val seconds = needed / 1000 % 60
         val millis = needed % 1000
