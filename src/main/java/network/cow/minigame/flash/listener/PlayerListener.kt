@@ -156,11 +156,9 @@ class PlayerListener(val game: SpigotGame, val plugin: Plugin) : Listener {
         val millis = needed % 1000
 
         val formatted = String.format("%02d:%02d.%03d", minutes, seconds, millis)
-        //player.sendMessage("§7Du hast insgesamt §b$formatted §7benötigt.")
         player.sendTranslatedInfo(Translations.TIME_NEEDED, formatted.highlight())
         //player.sendTweetLink(this.mapConfig!!.name, formatted)
 
-        //Bukkit.broadcastMessage("§a${event.player.name} §bhat das Ziel erreicht.")
         Bukkit.getServer().broadcastTranslatedInfo(Translations.PLAYER_FINISHED, event.player.displayName())
 
         Bukkit.getOnlinePlayers().forEach { it.playSound(it.location, Sound.ENTITY_ENDER_DRAGON_GROWL, 1f, 1f) }
@@ -175,16 +173,13 @@ class PlayerListener(val game: SpigotGame, val plugin: Plugin) : Listener {
 
         val index = player.getCurrentCheckPointIndex()
         player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 1.0F)
+
         val maxCheckpoints = this.game.getTypedPhase<FlashPhase>("game")!!.maxCheckpoints
         player.sendTranslatedInfo(Translations.CHECKPOINT_REACHED, "[$index/$maxCheckpoints]".highlight())
-
-            //.sendMessage("§7Du hast einen Checkpoint erreicht! §b[${index}/${mapConfig?.checkpoints}]")
 
         Bukkit.getOnlinePlayers()
             .filter { it != player }
             .forEach { it.sendTranslatedInfo(Translations.CHECKPOINT_REACHED_BROADCAST, player.displayName(), "$index".highlight()) }
-
-        /*it.sendMessage("$PREFIX §7Der Spieler §a${player.name} §7hat den §b${index}. §7Checkpoint erreicht.")*/
 
         spawnRandomFirework(this.plugin, player.location.clone())
     }

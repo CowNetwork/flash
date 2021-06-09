@@ -16,7 +16,7 @@ phases:
   - key: game
     kind: network.cow.minigame.flash.FlashPhase
     worldProvider:
-      kind: noma/spigot/worldProviders/StoreWorld
+      kind: noma/spigot/worldProviders/StoredWorld
       storeKey: map
     teleport:
       onStart: true

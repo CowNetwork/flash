@@ -77,7 +77,6 @@ fun Player.applyEffects() {
 
 fun Player.toggleVisibility() {
     if (this.inventory.getItem(5)?.type == Material.BLAZE_ROD) {
-        //this.sendMessage("§7Du hast alle Spieler §cversteckt§7.")
         this.sendTranslatedInfo(Translations.PLAYERS_HIDDEN)
         this.playSound(this.location, Sound.BLOCK_NOTE_BLOCK_PLING, 1.0F, 1.0F)
 
@@ -95,8 +94,6 @@ fun Player.toggleVisibility() {
             .build()
 
         this.inventory.setItem(5, item)
-
-        //player.sendMessage("$PREFIX §7Du §asiehst §7nun alle Spieler§7.")
         this.sendTranslatedInfo(Translations.PLAYERS_SHOWN)
         player!!.playSound(player!!.location, Sound.BLOCK_NOTE_BLOCK_PLING, 1.0F, 1.0F)
         Bukkit.getOnlinePlayers()
