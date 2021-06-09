@@ -1,26 +1,31 @@
 phases:
-  # TODO: wait phase
-  # - key: waiting
-  # bla bla
-
-  - key: vote
-    kind: network.cow.minigame.noma.spigot.phase.VotePhase
-    pool: maps
-    options: 5
-    votesPerPlayer: 3
+  - key: lobby
+    kind: noma/spigot/phases/LobbyVotePhase
+    worldProvider:
+      kind: noma/spigot/worldProviders/InitialWorld
+    voteables:
+      - pool: maps
+        options: 5
+        votesPerPlayer: 3
+        storeKey: map
     allowsNewPlayers: true
     phaseEndCountdown:
-      duration: 0
-    duration: 10
+      duration: 15
+    duration: 100
 
   - key: game
-    kind: network.cow.minigame.flash.FlashGame
+    kind: network.cow.minigame.flash.FlashPhase
     worldProvider:
-      kind: network.cow.minigame.noma.spigot.world.VotedWorldProvider
-      fromPhase: vote
+      kind: noma/spigot/worldProviders/StoreWorld
+      storeKey: map
     teleport:
       onStart: true
       selectionMethod: RANDOM
     phaseEndCountdown:
-      duration: 0
+      duration: 10
     duration: 600
+
+  - key: end
+    kind: noma/spigot/phases/EndPhase
+    phaseEndCountdown:
+      duration: 10

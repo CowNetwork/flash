@@ -75,6 +75,7 @@ fabric.properties
 
 *.iml
 modules.xml
+spawn
 .idea/misc.xml
 *.ipr
 .idea/

@@ -1,0 +1,13 @@
+translations:
+  fallbackLocale: de_DE
+  locales:
+    en_US:
+      core: true
+      paths:
+        - https://raw.githubusercontent.com/CowNetwork/translations/main/common/en_US.json
+        - https://raw.githubusercontent.com/CowNetwork/translations/main/minigame/en_US.json
+    de_DE:
+      core: true
+      paths:
+        - https://raw.githubusercontent.com/CowNetwork/translations/main/common/de_DE.json
+        - https://raw.githubusercontent.com/CowNetwork/translations/main/minigame/de_DE.json

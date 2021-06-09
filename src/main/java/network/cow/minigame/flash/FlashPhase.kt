@@ -17,46 +17,43 @@
  */
 package network.cow.minigame.flash
 
-import net.kyori.adventure.text.Component
-import network.cow.minigame.noma.api.Game
 import network.cow.minigame.noma.api.config.PhaseConfig
-import network.cow.minigame.noma.api.phase.EmptyPhaseResult
-import network.cow.minigame.noma.spigot.phase.SpigotPhase
-import network.cow.messages.spigot.broadcastInfo
+import network.cow.minigame.noma.spigot.SpigotActor
 import network.cow.minigame.noma.spigot.SpigotGame
+import network.cow.minigame.noma.spigot.phase.EndPhase
+import network.cow.minigame.noma.spigot.phase.SpigotPhase
 import network.cow.minigame.noma.spigot.phase.VotePhase
 import network.cow.minigame.noma.spigot.pool.WorldMeta
-
-import org.bukkit.Bukkit
 import org.bukkit.GameRule
 import org.bukkit.entity.Player
-import kotlin.io.path.name
 
-class FlashGame(game: Game<Player>, config: PhaseConfig<Player>) : SpigotPhase<EmptyPhaseResult>(game, config) {
+class FlashPhase(game: SpigotGame, config: PhaseConfig<Player, SpigotGame>) : SpigotPhase(game, config) {
+
+    val winners = mutableListOf<SpigotActor>()
+    var maxCheckpoints: Int = 0
+
     override fun onStart() {
         val startTime = System.currentTimeMillis()
-        val worldMeta = (this.game.getPhase("vote") as VotePhase<WorldMeta>).firstVotedItem()
-        val world = (this.game as SpigotGame).world
+        val result: VotePhase.Result<WorldMeta> = this.game.store.get("map") ?: error("no map meta")
+        val worldMeta: WorldMeta = result.items.first().value
+
+        maxCheckpoints = worldMeta.options["checkpoints"] as Int
+
         // TODO: set in map config
-        world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true)
-        this.game.getPlayers().forEach {
+        this.game.world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true)
+        this.game.getIngamePlayers().forEach {
             it.setFlashState(StateKey.SPEED, worldMeta.options["speedLevel"] as Int)
-            it.setFlashState(StateKey.CHECKPOINTS, startTime)
-            it.setRespawnLocation(worldMeta.globalSpawnLocations.first().toLocation(world) )
+            it.setFlashState(StateKey.START_TIME, startTime)
+            it.setRespawnLocation(worldMeta.globalSpawnLocations.first().toLocation(this.game.world) )
             it.applyEffects()
             it.giveItems()
         }
     }
+
+    override fun onStop() {
+        this.storeMiddleware.store.set(EndPhase.STORE_KEY, EndPhase.Result(this.winners.map { setOf(it) }))
+    }
     override fun onPlayerJoin(player: Player) = Unit
-
-    override fun onPlayerLeave(player: Player) {
-
-    }
-
-    override fun onStop() = EmptyPhaseResult()
-
-
-    override fun onTimeout() {
-        TODO("Not yet implemented")
-    }
+    override fun onPlayerLeave(player: Player) = Unit
+    override fun onTimeout() = Unit
 }

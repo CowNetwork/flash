@@ -19,9 +19,14 @@ package network.cow.minigame.flash.listener
 
 import com.destroystokyo.paper.event.player.PlayerPostRespawnEvent
 import net.kyori.adventure.text.Component
+import network.cow.messages.adventure.highlight
+import network.cow.messages.spigot.broadcastTranslatedInfo
+import network.cow.messages.spigot.sendTranslatedError
+import network.cow.messages.spigot.sendTranslatedInfo
 import network.cow.minigame.flash.*
 import network.cow.minigame.flash.event.PlayerCheckpointEvent
 import network.cow.minigame.flash.event.PlayerFinishedEvent
+import network.cow.minigame.noma.spigot.SpigotGame
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Material
@@ -37,7 +42,7 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerRespawnEvent
 import org.bukkit.plugin.Plugin
 
-class PlayerListener(val plugin: Plugin) : Listener {
+class PlayerListener(val game: SpigotGame, val plugin: Plugin) : Listener {
 
     @EventHandler
     private fun onFinishTriggered(event: PlayerInteractEvent) {
@@ -45,7 +50,9 @@ class PlayerListener(val plugin: Plugin) : Listener {
         if (event.action != Action.PHYSICAL) return
         if (event.clickedBlock?.type != Material.OAK_PRESSURE_PLATE) return
         val type = event.clickedBlock?.location?.subtract(0.0, 1.0, 0.0)?.block?.type
-        if (type != Material.WHITE_WOOL) return
+
+        // ghetto isWool check
+        if (!type.toString().endsWith("WOOL")) return
         Bukkit.getPluginManager().callEvent(PlayerFinishedEvent(event.player, System.currentTimeMillis()))
     }
 
@@ -74,7 +81,8 @@ class PlayerListener(val plugin: Plugin) : Listener {
         }
 
         if (number > player.getCurrentCheckPointIndex() + 1) {
-            //player.sendMessage("$PREFIX §cDu hast ein Checkpoint übersprungen! Du wurdest zurück teleportiert!")
+            //player.sendMessage("§cDu hast ein Checkpoint übersprungen! Du wurdest zurück teleportiert!")
+            player.sendTranslatedError(Translations.CHECKPOINT_SKIPPED)
             player.respawn()
             player.playSound(player.location, Sound.ENTITY_ENDERMAN_DEATH, 1.0F, 1.0F)
             return
@@ -103,8 +111,6 @@ class PlayerListener(val plugin: Plugin) : Listener {
     @EventHandler
     private fun onPlayerDeath(event: PlayerDeathEvent) {
         event.keepInventory = true
-        //event.entity.player?.spigot().respawn()
-        //Bukkit.getScheduler().runTaskLater(plugin, Runnable { event.entity.respawn() }, 1)
         event.deathMessage(Component.empty())
     }
 
@@ -136,6 +142,8 @@ class PlayerListener(val plugin: Plugin) : Listener {
         val player = event.player
         player.gameMode = GameMode.SPECTATOR
 
+        (this.game.getPhase("game") as FlashPhase).winners.add(this.game.getSpigotActor(player)!!)
+
         // Show all players again, since if previously hidden
         // the player cannot use the teleport functionality
         Bukkit.getOnlinePlayers()
@@ -148,11 +156,15 @@ class PlayerListener(val plugin: Plugin) : Listener {
         val millis = needed % 1000
 
         val formatted = String.format("%02d:%02d.%03d", minutes, seconds, millis)
-        //player.sendMessage("$PREFIX §7Du hast insgesamt §b$formatted §7benötigt.")
+        //player.sendMessage("§7Du hast insgesamt §b$formatted §7benötigt.")
+        player.sendTranslatedInfo(Translations.TIME_NEEDED, formatted.highlight())
         //player.sendTweetLink(this.mapConfig!!.name, formatted)
 
-        //Bukkit.broadcastMessage("$PREFIX §a${event.player.name} §bhat das Ziel erreicht.")
+        //Bukkit.broadcastMessage("§a${event.player.name} §bhat das Ziel erreicht.")
+        Bukkit.getServer().broadcastTranslatedInfo(Translations.PLAYER_FINISHED, event.player.displayName())
+
         Bukkit.getOnlinePlayers().forEach { it.playSound(it.location, Sound.ENTITY_ENDER_DRAGON_GROWL, 1f, 1f) }
+        this.game.nextPhase(false) // stop the flash phase
     }
 
     @EventHandler
@@ -163,11 +175,16 @@ class PlayerListener(val plugin: Plugin) : Listener {
 
         val index = player.getCurrentCheckPointIndex()
         player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 1.0F)
-        //player.sendMessage("$PREFIX §7Du hast einen Checkpoint erreicht! §b[${index}/${mapConfig?.checkpoints}]")
+        val maxCheckpoints = this.game.getTypedPhase<FlashPhase>("game")!!.maxCheckpoints
+        player.sendTranslatedInfo(Translations.CHECKPOINT_REACHED, "[$index/$maxCheckpoints]".highlight())
+
+            //.sendMessage("§7Du hast einen Checkpoint erreicht! §b[${index}/${mapConfig?.checkpoints}]")
 
         Bukkit.getOnlinePlayers()
             .filter { it != player }
-            .forEach { /*it.sendMessage("$PREFIX §7Der Spieler §a${player.name} §7hat den §b${index}. §7Checkpoint erreicht.")*/ }
+            .forEach { it.sendTranslatedInfo(Translations.CHECKPOINT_REACHED_BROADCAST, player.displayName(), "$index".highlight()) }
+
+        /*it.sendMessage("$PREFIX §7Der Spieler §a${player.name} §7hat den §b${index}. §7Checkpoint erreicht.")*/
 
         spawnRandomFirework(this.plugin, player.location.clone())
     }

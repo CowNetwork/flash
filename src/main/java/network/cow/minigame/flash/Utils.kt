@@ -18,6 +18,7 @@
 package network.cow.minigame.flash
 
 import net.kyori.adventure.text.Component
+import network.cow.spigot.extensions.ItemBuilder
 import org.bukkit.*
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Firework
@@ -25,12 +26,9 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 import java.util.*
 
-fun create(material: Material, name: String): ItemStack {
-    val item = ItemStack(material, 1)
-    val meta = item.itemMeta
-    meta.displayName(Component.text(name))
-    item.setItemMeta(meta)
-    return item
+fun create(material: Material, name: Component): ItemStack {
+
+    return ItemBuilder(material).name(name).build()
 }
 
 /*
