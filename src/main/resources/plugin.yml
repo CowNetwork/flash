@@ -15,7 +15,7 @@
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 name: flash
-main: network.cow.minigame.flash.FlashPlugin
+main: network.cow.mc.minigame.flash.FlashPlugin
 version: 1.0.0
 api-version: 1.16
 author: freggy
