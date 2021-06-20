@@ -1,4 +1,4 @@
-package network.cow.minigame.flash
+package network.cow.mc.minigame.flash
 
 object Translations {
     const val CHECKPOINT_REACHED_BROADCAST = "minigame.flash.checkpoint_reached_broadcast"

@@ -15,36 +15,29 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package network.cow.minigame.flash
+package network.cow.mc.minigame.flash.event
 
-import org.bukkit.Location
-import java.util.*
+import network.cow.mc.minigame.flash.Checkpoint
+import org.bukkit.entity.Player
+import org.bukkit.event.HandlerList
+import org.bukkit.event.player.PlayerEvent
 
-data class Checkpoint(val location: Location, val timeReached: Long)
 
-data class FlashPlayer(
-    val uuid: UUID,
-    val globalStats: GlobalStats,
-    val mapScore: MapScore
-)
+class PlayerCheckpointEvent(player: Player, val checkpoint: Checkpoint) : PlayerEvent(player) {
 
-data class GlobalStats(
-    val wins: Int,
-    val deaths: Int,
-    val checkpoints: Int,
-    val gamesPlayed: Int,
-    val points: Int,
-)
+    companion object {
+        @JvmStatic
+        val handlerList = HandlerList()
+    }
 
-data class MapScore(
-    val map: String,
-    val timeNeeded: Int,
-    val accomplishedAt: Long
-)
+    override fun getHandlers() = handlerList
+}
 
-enum class StateKey(val key: String) {
-    SPEED("speed"),
-    START_TIME("startTime"),
-    CHECKPOINTS("checkpoints"),
-    RESPAWN_LOCATION("respawnLocation")
+class PlayerFinishedEvent(player: Player, val finished: Long) : PlayerEvent(player){
+    companion object {
+        @JvmStatic
+        val handlerList = HandlerList()
+    }
+
+    override fun getHandlers() = handlerList
 }

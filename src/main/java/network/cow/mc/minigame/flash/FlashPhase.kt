@@ -15,7 +15,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package network.cow.minigame.flash
+package network.cow.mc.minigame.flash
 
 import network.cow.minigame.noma.api.config.PhaseConfig
 import network.cow.minigame.noma.spigot.SpigotActor

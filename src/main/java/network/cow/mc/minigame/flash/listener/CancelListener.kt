@@ -15,9 +15,8 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package network.cow.minigame.flash.listener
+package network.cow.mc.minigame.flash.listener
 
-import network.cow.minigame.noma.spigot.SpigotGame
 import org.bukkit.entity.EntityType
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener

@@ -15,14 +15,14 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package network.cow.minigame.flash
+package network.cow.mc.minigame.flash
 
-import network.cow.messages.spigot.MessagesPlugin
-import network.cow.minigame.noma.spigot.NomaGamePlugin
+import network.cow.mc.minigame.flash.listener.CancelListener
+import network.cow.mc.minigame.flash.listener.PlayerListener
 import network.cow.messages.adventure.gradient
 import network.cow.messages.core.Gradients
-import network.cow.minigame.flash.listener.CancelListener
-import network.cow.minigame.flash.listener.PlayerListener
+import network.cow.messages.spigot.MessagesPlugin
+import network.cow.minigame.noma.spigot.NomaGamePlugin
 import network.cow.minigame.noma.spigot.SpigotGame
 import org.bukkit.Bukkit
 

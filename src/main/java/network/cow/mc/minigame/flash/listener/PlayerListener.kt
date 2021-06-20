@@ -15,17 +15,17 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package network.cow.minigame.flash.listener
+package network.cow.mc.minigame.flash.listener
 
 import com.destroystokyo.paper.event.player.PlayerPostRespawnEvent
 import net.kyori.adventure.text.Component
+import network.cow.mc.minigame.flash.*
+import network.cow.mc.minigame.flash.event.PlayerCheckpointEvent
+import network.cow.mc.minigame.flash.event.PlayerFinishedEvent
 import network.cow.messages.adventure.highlight
 import network.cow.messages.spigot.broadcastTranslatedInfo
 import network.cow.messages.spigot.sendTranslatedError
 import network.cow.messages.spigot.sendTranslatedInfo
-import network.cow.minigame.flash.*
-import network.cow.minigame.flash.event.PlayerCheckpointEvent
-import network.cow.minigame.flash.event.PlayerFinishedEvent
 import network.cow.minigame.noma.spigot.SpigotGame
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
